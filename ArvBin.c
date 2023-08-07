@@ -145,7 +145,7 @@ int insere_ArvBin(ArvBin *raiz, int valor){
 
 struct NO* remove_atual(struct NO* atual){
     struct NO *no1, *no2;
-    if(atual->esq == NULL){ //sem filho a esquerda. Aponta para o flho da direita (trata nó folha e nó com 1 filho)
+    if(atual->esq == NULL){ //sem filho a esquerda. Aponta para o flho da direita (trata nÃ³ folha e nÃ³ com 1 filho)
         no2 = atual->dir;
         free(atual);
         return no2;
