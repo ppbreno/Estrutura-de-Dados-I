@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+typedef enum{false, true} bool;
+
 typedef struct tpstring{
     char elem;
     struct tpstring *prox;
@@ -17,9 +19,9 @@ void imprimir_str(tpstring *str){
     }else{
         printf("String: ");
         while (str != NULL){
-        printf("%c",str->elem);
-        str = str->prox;
-    }
+            printf("%c",str->elem);
+            str = str->prox;
+        }
     }
     printf("\n\n");
 }
@@ -92,6 +94,81 @@ void deletar(tpstring **str1, int nro, int start){
     printf("Removido com sucesso.");
 }
 
+void inserirMeio(tpstring **str1, tpstring *str2, tpstring **str3, int start){
+    tpstring *aux1 = *str1;
+    tpstring *aux2 = str2;
+    int i = 0;
+    if(start == tamanho_str(*str1)){
+        concatenar(*str1, str2, *str3);
+    }else if(start < tamanho_str(*str1)){
+        while(i < start){
+            aux1 = aux1->prox;
+            i++;
+        }
+        tpstring *backup = aux1->prox;
+        aux1->prox = aux2;
+        while(aux2->prox != NULL){
+            aux2 = aux2->prox;
+        }
+        aux2->prox = backup;
+    }else{
+        printf("Posicao invalida, maior que a String");
+    }
+}
+
+bool menor(tpstring *str1, tpstring *str2){
+    tpstring *aux1 = str1;
+    tpstring *aux2 = str2;
+    while(aux1 != NULL && aux2 != NULL){
+        if(aux1->elem < aux2->elem){
+                printf("String 1 é MENOR\n");
+            return true;
+        }else if(aux1->elem == aux2->elem){
+            aux1 = aux1->prox;
+            aux2 = aux2->prox;
+        }else{
+            printf("String 1 é MAIOR\n");
+            return false;
+        }
+
+    }
+    if(aux1 == NULL && aux2 == NULL){
+        printf("String 1 é MAIOR\n");
+        return false;
+    }else if(aux2 == NULL){
+        printf("String 1 é MAIOR\n");
+        return false;
+    }else if(aux1 == NULL){
+        printf("String 1 é MENOR\n");
+        return true;
+    }
+}
+
+bool comparacao(tpstring *str1, tpstring *str2){
+    tpstring *aux1, *aux2;
+    aux1 = str1;
+    aux2 = str2;
+    while((aux1 != NULL) && (aux2 != NULL)){
+        if(aux1->elem == aux2->elem){
+            aux2 = aux2->prox;
+            aux1 = aux1->prox;
+        }else{
+            printf("As strings NAO sao iguais\n");
+            return false;
+        }
+    }
+    if((aux1 == NULL) && (aux2 == NULL)){
+        printf("As strings SAO iguais\n");
+        return true;
+    }else if((aux1 == NULL) || (aux2 == NULL)){
+        printf("As strings NAO sao iguais\n");
+        return false;
+    }else{
+        printf("As strings SAO iguais\n");
+        return true;
+    }
+}
+
 void menu (tpstring **str1, tpstring **str2, tpstring **str3){
     int op = 0, nro, start;
     char letra;
@@ -103,7 +180,10 @@ void menu (tpstring **str1, tpstring **str2, tpstring **str3){
         printf("4 - Copiar String para outra\n");
         printf("5 - Concatenar Strings\n");
         printf("6 - Remover caracteres da String\n");
-        printf("9 - Sair\n");
+        printf("7 - Inserir substring na String\n");
+        printf("8 - Verificar String maior\n");
+        printf("9 - Verificar igualdade\n");
+        printf("10 - Sair\n");
         printf("Sua opcao: ");
         scanf("%d", &op);
         fflush(stdin);
@@ -135,6 +215,23 @@ void menu (tpstring **str1, tpstring **str2, tpstring **str3){
             scanf("%d", &start);
             deletar(str1, nro, start);
             imprimir_str(*str1);
+            break;
+        case 7:
+            printf("Inserir a partir de qual posicao? (0 - %d)\n", tamanho_str(*str1)-1);
+            scanf("%d", &start);
+            inserirMeio(str1, *str2, str3, start);
+            if(*str3 != NULL){
+                imprimir_str(*str3);
+            }else{
+                imprimir_str(*str1);
+            }
+            break;
+        case 8:
+            menor(*str1, *str2);
+            break;
+        case 9:
+            comparacao(*str1, *str2);
+            break;
         }
     }
 
@@ -159,9 +256,12 @@ int main (){
     insercao(&str1,'e');
 
     insercao(&str2,'a');
-    insercao(&str2,'z');
-    insercao(&str2,'u');
-    insercao(&str2,'l');
+    insercao(&str2,'b');
+    insercao(&str2,'a');
+    insercao(&str2,'c');
+    insercao(&str2,'a');
+    insercao(&str2,'t');
+    insercao(&str2,'e');
 
     menu(&str1, &str2, &str3);
     //imprimir_str(str1);
